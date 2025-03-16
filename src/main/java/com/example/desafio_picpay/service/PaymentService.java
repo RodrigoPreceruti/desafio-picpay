@@ -2,27 +2,38 @@ package com.example.desafio_picpay.service;
 
 import com.example.desafio_picpay.client.PaymentAuthorizationClient;
 import com.example.desafio_picpay.dto.PaymentRequestDTO;
-import com.example.desafio_picpay.entity.User;
-import com.example.desafio_picpay.entity.UserType;
+import com.example.desafio_picpay.entity.payment.Payment;
+import com.example.desafio_picpay.entity.user.User;
+import com.example.desafio_picpay.entity.user.UserType;
+import com.example.desafio_picpay.repository.PaymentRepository;
 import com.example.desafio_picpay.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class PaymentService {
     @Autowired
-    private UserRepository repository;
+    private PaymentRepository repository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private PaymentAuthorizationClient paymentAuthorizationClient;
 
+    public List<Payment> findAllPayments() {
+        return this.repository.findAll();
+    }
+
     public void makePayment(PaymentRequestDTO requestBody) {
-        User payer = this.repository
+        User payer = this.userRepository
                 .findById(requestBody.payer())
                 .orElseThrow(EntityNotFoundException::new);
 
-        User payee = this.repository
+        User payee = this.userRepository
                 .findById(requestBody.payee())
                 .orElseThrow(EntityNotFoundException::new);
 
@@ -41,8 +52,14 @@ public class PaymentService {
         payer.setBalance(payer.getBalance().subtract(requestBody.value()));
         payee.setBalance(payee.getBalance().add(requestBody.value()));
 
-        this.repository.save(payer);
-        this.repository.save(payee);
+        Payment payment = new Payment();
+        payment.setPayer(payer);
+        payment.setPayee(payee);
+        payment.setValue(requestBody.value());
+
+        this.repository.save(payment);
+        this.userRepository.save(payer);
+        this.userRepository.save(payee);
     }
 
     public Boolean validatePayment(User user) {

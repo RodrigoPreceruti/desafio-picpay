@@ -1,7 +1,7 @@
 package com.example.desafio_picpay.controller;
 
-import com.example.desafio_picpay.entity.CreateUserDTO;
-import com.example.desafio_picpay.entity.User;
+import com.example.desafio_picpay.entity.user.CreateUserDTO;
+import com.example.desafio_picpay.entity.user.User;
 import com.example.desafio_picpay.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

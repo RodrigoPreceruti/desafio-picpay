@@ -1,4 +1,4 @@
-package com.example.desafio_picpay.entity;
+package com.example.desafio_picpay.entity.user;
 
 import java.math.BigDecimal;
 
