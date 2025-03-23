@@ -55,7 +55,7 @@ public class PaymentService {
         Payment payment = new Payment();
         payment.setPayer(payer);
         payment.setPayee(payee);
-        payment.setValue(requestBody.value());
+        payment.setPaymentValue(requestBody.value());
 
         this.repository.save(payment);
         this.userRepository.save(payer);

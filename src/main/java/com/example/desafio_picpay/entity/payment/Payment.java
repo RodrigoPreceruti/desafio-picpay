@@ -28,5 +28,5 @@ public class Payment {
     @JoinColumn(name = "payee_id")
     private User payee;
 
-    private BigDecimal value;
+    private BigDecimal paymentValue;
 }
